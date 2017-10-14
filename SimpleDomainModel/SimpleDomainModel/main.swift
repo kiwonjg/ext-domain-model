@@ -26,12 +26,12 @@ open class TestMe {
 public struct Money {
     public var amount : Int
     public var currency : String
-
+/*
     init(amount: Int, currency: String) {
         self.amount = amount
         self.currency = currency
     }
-
+*/
     public func convert(_ to: String) -> Money {
         if (currencyCheck(to)) {
             var newAmount = self.amount
@@ -67,14 +67,14 @@ public struct Money {
   
     public func add(_ to: Money) -> Money {
         if (currencyCheck(to.currency)) {
-            let prev = convert(to.currency)
+            let prev = self.convert(to.currency)
             return Money(amount: prev.amount + to.amount, currency: to.currency)
         }
         return to
     }
     public func subtract(_ from: Money) -> Money {
         if (currencyCheck(from.currency)) {
-            let prev = convert(from.currency)
+            let prev = self.convert(from.currency)
             return Money(amount: from.amount - prev.amount, currency: from.currency)
         }
         return from
@@ -101,15 +101,26 @@ open class Job {
   }
   
   public init(title : String, type : JobType) {
-    self.title = title // here
-    self.type = type // here
+    self.title = title
+    self.type = type
   }
   
   open func calculateIncome(_ hours: Int) -> Int {
-    return 0 // here
+    switch type {
+    case let .Salary(value):
+        return value
+    case let .Hourly(value):
+        return Int(value * Double(hours))
+    }
   }
   
   open func raise(_ amt : Double) {
+    switch type {
+    case let .Salary(value):
+        self.type = JobType.Salary(value + Int(amt))
+    case let .Hourly(value):
+        self.type = JobType.Hourly(value + amt)
+    }
   }
 }
 
@@ -123,15 +134,21 @@ open class Person {
 
   fileprivate var _job : Job? = nil
   open var job : Job? {
-    get { return nil } // here
+    get { return _job }
     set(value) {
+        if(self.age >= 16) {
+            _job = Job(title: value!.title, type: value!.type)
+        }
     }
   }
   
   fileprivate var _spouse : Person? = nil
   open var spouse : Person? {
-    get { return nil } // here
+    get { return _spouse }
     set(value) {
+        if(self.age >= 16) {
+            _spouse = Person(firstName: value!.firstName, lastName: value!.lastName, age: value!.age)
+        }
     }
   }
   
@@ -140,9 +157,9 @@ open class Person {
     self.lastName = lastName
     self.age = age
   }
-  
+    
   open func toString() -> String {
-    return "1" // here
+    return "[Person: firstName:\(self.firstName) lastName:\(self.lastName) age:\(self.age) job:\(String(describing: self.job)) spouse:\(String(describing: self.spouse))]"
   }
 }
 
@@ -153,14 +170,29 @@ open class Family {
   fileprivate var members : [Person] = []
   
   public init(spouse1: Person, spouse2: Person) {
+    if (spouse1.spouse == nil && spouse2.spouse == nil) {
+        self.members = [spouse1, spouse2]
+        spouse1.spouse = spouse2
+        spouse2.spouse = spouse1
+    }
   }
   
   open func haveChild(_ child: Person) -> Bool {
-    return false // here
+    if (members[0].age >= 21 || members[1].age >= 21) {
+        members.append(child)
+        return true
+    }
+    return false
   }
   
   open func householdIncome() -> Int {
-    return 1 // here
+    var result = 0
+    for person in members {
+        if (person.job != nil) {
+            result += person.job!.calculateIncome(2000)
+        }
+    }
+    return result
   }
 }
 
