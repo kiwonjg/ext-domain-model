@@ -25,36 +25,38 @@ open class TestMe {
 //
 public struct Money {
     public var amount : Int
-    public var currency : String
-/*
-    init(amount: Int, currency: String) {
-        self.amount = amount
-        self.currency = currency
+    public var currency : CurrencyType
+    
+    public enum CurrencyType {
+        case GBP
+        case EUR
+        case CAN
+        case USD
     }
-*/
-    public func convert(_ to: String) -> Money {
+
+    public func convert(_ to: CurrencyType) -> Money {
         if (currencyCheck(to)) {
             var newAmount = self.amount
             let oldCurr = currency
             switch oldCurr {
-            case "GBP":
+            case .GBP:
                 newAmount *= 2
-            case "EUR":
+            case .EUR:
                 newAmount *= 2
                 newAmount /= 3
-            case "CAN":
+            case .CAN:
                 newAmount *= 4
                 newAmount /= 5
             default:
                 newAmount *= 1
             }
             switch to {
-            case "GBP":
+            case .GBP:
                 newAmount /= 2
-            case "EUR":
+            case .EUR:
                 newAmount /= 2
                 newAmount *= 3
-            case "CAN":
+            case .CAN:
                 newAmount /= 4
                 newAmount *= 5
             default:
@@ -80,8 +82,8 @@ public struct Money {
         return from
     }
     
-    private func currencyCheck(_ to: String) -> Bool {
-        if (to == "GBP" || to == "EUR" || to == "USD" || to == "CAN") {
+    private func currencyCheck(_ to: CurrencyType) -> Bool {
+        if (to == .GBP || to == .EUR || to == .USD || to == .CAN) {
             return true;
         }
         return false;
