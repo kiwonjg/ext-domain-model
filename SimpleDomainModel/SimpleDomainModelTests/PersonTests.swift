@@ -34,7 +34,14 @@ class PersonTests: XCTestCase {
     mike.spouse = Person(firstName: "Bambi", lastName: "Jones", age: 42)
     XCTAssert(mike.spouse != nil)
   }
-  
+
+  func testDescription() {
+    let ted = Person(firstName: "Ted", lastName: "Neward", age: 45)
+    XCTAssert(ted.description == "Ted Neward (45 years old)")
+    
+    let mike = Person(firstName: "Michael", lastName: "Neward", age: 22)
+    XCTAssert(mike.description == "Michael Neward (22 years old)")
+  }
 }
 
 class FamilyTests : XCTestCase {
@@ -67,8 +74,14 @@ class FamilyTests : XCTestCase {
     let _ = family.haveChild(matt)
     
     let familyIncome = family.householdIncome()
-    print(familyIncome)
     XCTAssert(familyIncome == 12000)
   }
   
+  func testDescription() {
+    let ted = Person(firstName: "Ted", lastName: "Neward", age: 45)
+    let charlotte = Person(firstName: "Charlotte", lastName: "Neward", age: 45)
+    
+    let family = Family(spouse1: ted, spouse2: charlotte)
+    XCTAssert(family.description == "Ted Neward (45 years old), Charlotte Neward (45 years old)")
+  }
 }

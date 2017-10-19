@@ -92,5 +92,46 @@ class MoneyTests: XCTestCase {
     XCTAssert(total.amount == 10)
     XCTAssert(total.currency == Money.CurrencyType.GBP)
   }
+    
+  func testDescription() {
+    let tenUSD = Money(amount: 10, currency: Money.CurrencyType.USD)
+    let fiveGBP = Money(amount: 5, currency: Money.CurrencyType.GBP)
+    let fifteenEUR = Money(amount: 15, currency: Money.CurrencyType.EUR)
+    let fifteenCAN = Money(amount: 15, currency: Money.CurrencyType.CAN)
+    
+    XCTAssert(tenUSD.description == "USD10.0")
+    XCTAssert(fiveGBP.description == "GBP5.0")
+    XCTAssert(fifteenEUR.description == "EUR15.0")
+    XCTAssert(fifteenCAN.description == "CAN15.0")
+  }
+    
+  func testMathematics() {
+    let tenUSD = Money(amount: 10, currency: Money.CurrencyType.USD)
+    let fiveUSD = Money(amount: 5, currency: Money.CurrencyType.USD)
+    let fifteenUSD = tenUSD + fiveUSD
+    
+    XCTAssert(fifteenUSD.amount == 15)
+    XCTAssert(fifteenUSD.currency == Money.CurrencyType.USD)
+    XCTAssert(fifteenUSD.description == "USD15.0")
+    
+    let newFiveUSD = fifteenUSD - tenUSD
+    XCTAssert(newFiveUSD.amount == 5)
+    XCTAssert(newFiveUSD.currency == Money.CurrencyType.USD)
+    XCTAssert(newFiveUSD.description == "USD5.0")
+  }
+  
+  func testDouble() {
+    let tenUSD = 10.0.USD
+    
+    XCTAssert(tenUSD.amount == 10)
+    XCTAssert(tenUSD.currency == Money.CurrencyType.USD)
+    XCTAssert(tenUSD.description == "USD10.0")
+    
+    let fiveGBP = 5.0.GBP
+    
+    XCTAssert(fiveGBP.amount == 5)
+    XCTAssert(fiveGBP.currency == Money.CurrencyType.GBP)
+    XCTAssert(fiveGBP.description == "GBP5.0")
+  }
 }
 
